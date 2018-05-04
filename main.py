@@ -21,7 +21,13 @@ from dao.Designate import *
 # parse = parseMarc('fddx11', 'books_qk', 'fdu', 2, 3, 5)
 # parse.update_has_table('/Users/daivd/www/python/data/fdu_president.xlsx')
 
-trans = TransformChinese(db='fddx11', table='books_qk')
+# parse = parseMarc('fddx', 'books_president', 'fdu', 2, 3, 5)
+# parse.parse_marc('/Users/sower/www/python3/parsebook/data/excel/fdu_president.xlsx')
+
+# parse = parseMarc('fddx', 'books_president', 'nlc', 0, 3, 4)
+# parse.parse_marc('/Users/sower/www/python3/parsebook/data/excel/nlc_president.xlsx')
+
+trans = TransformChinese(db='fddx', table='books_president')
 keys = ('title_cn', 'description', 'description_plus', 'binding', 'series', 'publish_co', 'pages',
         'publish_address', 'type', 'g200', 'f200', 'e200', 'version',
         'publish_year')

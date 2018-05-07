@@ -1,4 +1,6 @@
 from util.DBHelper import DBHelper
+import pymysql
+
 
 
 class Designate():
@@ -38,16 +40,28 @@ class Designate():
                 data_table, sid)
             cursor.execute(detail_one)
             detail = cursor.fetchone()
-            decription = detail['decription'] if detail['decription'] else ''
+            description = detail['description'] if detail['description'] else ''
+            description_plus = detail['description_plus'] if detail['description_plus'] else ''
             title_cn = detail['title_cn'] if detail['title_cn'] else ''
             series = detail['series'] if detail['series'] else ''
+            e200 = detail['e200'] if detail['e200'] else ''
+            c200 = detail['c200'] if detail['c200'] else ''
+            i200 = detail['i200'] if detail['i200'] else ''
+            f200 =  detail['f200'] if detail['f200'] else ''
+            g200 =  detail['g200'] if detail['g200'] else ''
+            subject_plus =  detail['subject_plus'] if detail['subject_plus'] else ''
             for scholar in scholars:
                 id = scholar['id']
                 name = scholar['name']
-                if name in (decription+title_cn+series):
-                        description_sql = "insert into {} (sid,author,duty) values ('{}','{}','{}')".format(duty_out_table,sid,name,'内容相关')
-                        cursor.execute(description_sql)
-                        conn.commit()
+                if name in description_plus:
+                    description_sql = "insert into {} (sid, author, duty, description_plus) values ('{}','{}','{}','{}')".format(duty_out_table, sid, name, '', pymysql.escape_string(description_plus))
+                    cursor.execute(description_sql)
+                    conn.commit()
+                elif name in (title_cn+series+e200+c200+i200+f200+g200+subject_plus):
+                    print(sid,title_cn+series+e200+c200+i200+f200+g200)
+                    description_sql = "insert into {} (sid, author, duty, description_plus) values ('{}','{}','{}','{}')".format(duty_out_table, sid, name, '内容相关', pymysql.escape_string(title_cn+series))
+                    cursor.execute(description_sql)
+                    conn.commit()
             # print(decription)
             # print(sid)
         # 找到没有指派过的

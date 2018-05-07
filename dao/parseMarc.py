@@ -125,6 +125,8 @@ class parseMarc:
 
     def parse_row(self, row):
 
+        REGPX_ISBN = re.compile(r'\d{9,12}[0-9a-zA-Z]')
+
         if self.source == 'nlc':
             REGPX_A = re.compile(r'\|a\s?([^\|]+)')
             REGPX_B = re.compile(r'\|b\s?([^\|]+)')
@@ -165,18 +167,72 @@ class parseMarc:
             field = str(int(field))
         field = field.replace(' ', '')
         if field == '2001':
-            self.item.title_cn =  REGPX_A.findall(value)[0] if REGPX_A.findall(value) else ''
+            REGPX_A_VALUE = REGPX_A.findall(value)
+            REGPX_C_VALUE =  REGPX_C.findall(value)
+            REGPX_D_VALUE =  REGPX_D.findall(value)
+            REGPX_E_VALUE =  REGPX_E.findall(value)
+            REGPX_F_VALUE =  REGPX_F.findall(value)
+            REGPX_G_VALUE =  REGPX_G.findall(value)
+            REGPX_H_VALUE =  REGPX_H.findall(value)
+            REGPX_I_VALUE =  REGPX_I.findall(value)
+            REGPX_V_VALUE =  REGPX_V.findall(value)
+            REGPX_Z_VALUE =  REGPX_Z.findall(value)
+            REGPX_9_VALUE =  REGPX_9.findall(value)
+
+            if REGPX_A_VALUE:
+                for v in REGPX_A_VALUE:
+                    self.item.title_cn += (v.strip(' ')+'@@@')
             self.item.type = REGPX_B.findall(value)[0] if REGPX_B.findall(value) else ''
-            self.item.c200 = REGPX_C.findall(value)[0] if REGPX_C.findall(value) else ''
-            self.item.d200 = REGPX_D.findall(value)[0] if REGPX_D.findall(value) else ''
-            self.item.e200 = REGPX_E.findall(value)[0] if REGPX_E.findall(value) else ''
-            self.item.f200 = REGPX_F.findall(value)[0] if REGPX_F.findall(value) else ''
-            self.item.g200 = REGPX_G.findall(value)[0] if REGPX_G.findall(value) else ''
-            self.item.h200 = REGPX_H.findall(value)[0] if REGPX_H.findall(value) else ''
-            self.item.i200 = REGPX_I.findall(value)[0] if REGPX_I.findall(value) else ''
-            self.item.v200 = REGPX_V.findall(value)[0] if REGPX_V.findall(value) else ''
-            self.item.z200 = REGPX_Z.findall(value)[0] if REGPX_Z.findall(value) else ''
-            self.item.title_py = REGPX_9.findall(value)[0] if REGPX_9.findall(value) else ''     
+            if REGPX_C_VALUE:
+                for v in REGPX_C_VALUE:
+                    self.item.c200 += (v.strip(' ')+'@@@')
+            if REGPX_D_VALUE:
+                for v in REGPX_D_VALUE:
+                    self.item.d200 += (v.strip(' ')+'@@@')
+            if REGPX_E_VALUE:
+                for v in REGPX_E_VALUE:
+                    self.item.e200 += (v.strip(' ')+'@@@')
+            if REGPX_F_VALUE:
+                for v in REGPX_F_VALUE:
+                    self.item.f200 += (v.strip(' ')+'@@@')
+            if REGPX_G_VALUE:
+                for v in REGPX_G_VALUE:
+                    self.item.g200 += (v.strip(' ')+'@@@')
+            if REGPX_H_VALUE:
+                for v in REGPX_H_VALUE:
+                    self.item.h200 += (v.strip(' ')+'@@@')
+            if REGPX_I_VALUE:
+                for v in REGPX_I_VALUE:
+                    self.item.i200 += (v.strip(' ')+'@@@')
+            if REGPX_V_VALUE:
+                for v in REGPX_V_VALUE:
+                    self.item.v200 += (v.strip(' ')+'@@@')
+            if REGPX_Z_VALUE:
+                for v in REGPX_Z_VALUE:
+                    self.item.z200 += (v.strip(' ')+'@@@')
+
+
+            # self.item.title_cn =  REGPX_A.findall(value)[0] if REGPX_A.findall(value) else ''
+            # self.item.type = REGPX_B.findall(value)[0] if REGPX_B.findall(value) else ''
+            # self.item.c200 = REGPX_C.findall(value)[0] if REGPX_C.findall(value) else ''
+            # self.item.d200 = REGPX_D.findall(value)[0] if REGPX_D.findall(value) else ''
+            # self.item.e200 = REGPX_E.findall(value)[0] if REGPX_E.findall(value) else ''
+            # self.item.f200 = REGPX_F.findall(value)[0] if REGPX_F.findall(value) else ''
+            # self.item.g200 = REGPX_G.findall(value)[0] if REGPX_G.findall(value) else ''
+            # self.item.h200 = REGPX_H.findall(value)[0] if REGPX_H.findall(value) else ''
+            # self.item.i200 = REGPX_I.findall(value)[0] if REGPX_I.findall(value) else ''
+            # self.item.v200 = REGPX_V.findall(value)[0] if REGPX_V.findall(value) else ''
+            # self.item.z200 = REGPX_Z.findall(value)[0] if REGPX_Z.findall(value) else ''
+            # self.item.title_py = REGPX_9.findall(value)[0] if REGPX_9.findall(value) else ''
+        if self.source == 'fdu':
+            if field == '001':
+                self.item.fdu_sys_no = value
+        if field[0] == '6' and (field[2] == '0' or field[2]=='1'):
+            temp_6xx = REGPX_ALL.findall(value)
+            if temp_6xx:
+                for one in temp_6xx:
+                    self.item.subject_plus += (one+'@@@')  
+           
         if field == '330':
             self.item.description = REGPX_A.findall(value)[0] if REGPX_A.findall(value) else ''
             print(row[self.field_value_index])
@@ -187,7 +243,10 @@ class parseMarc:
                     self.item.description_plus += (one+'@@@')
         if field == '010' or field == '091':
             isbn = REGPX_A.findall(value)[0].replace('-','') if REGPX_A.findall(value) else ''
-            self.item.isbn += (isbn+'@@@')
+            if REGPX_ISBN.findall(isbn):
+                self.item.isbn += (isbn+'@@@')
+            else:
+                self.item.book_number = isbn
             self.item.binding = REGPX_B.findall(value)[0] if REGPX_B.findall(value) else ''
             self.item.price = REGPX_D.findall(value)[0] if REGPX_D.findall(value) else ''
         if field == '210':

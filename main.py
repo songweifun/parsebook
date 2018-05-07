@@ -15,16 +15,25 @@ from dao.Designate import *
 # parse = parseMarc('fddx12', 'books_qk_temp', 'fdu', 1, 2, 4)
 # parse.parse_marc('/Users/daivd/www/python/data/add/books_qk_back.xlsx')
 
-# parse = parseMarc('fddx12', 'books_xz', 'fdu', 1, 2, 4)
-# parse.parse_marc('/Users/daivd/www/python/data/add/xuezhe.xlsx')
+# parse = parseMarc('fddx12', 'books_book_temp', 'fdu', 1, 2, 4)
+# parse.parse_marc('/Users/daivd/www/python/data/add/books_book_dan_dan20180503.xlsx')
 
-# parse = parseMarc('fddx11', 'books_qk', 'fdu', 2, 3, 5)
+# parse = parseMarc('fddx11', 'books_book_dan_dan_dan', 'fdu', 2, 3, 5)
 # parse.update_has_table('/Users/daivd/www/python/data/fdu_president.xlsx')
 
-trans = TransformChinese(db='fddx11', table='books_qk')
+# parse = parseMarc('fddx11', 'books_book_dan_dan_dan', 'nlc', 0, 3, 4)
+# parse.update_has_table('/Users/daivd/www/python/data/nlc_president.xlsx')
+
+# parse = parseMarc('fddx11', 'books_book_dan_dan_dan', 'nlc', 0, 1, 2)
+# parse.update_has_table('/Users/daivd/www/python/data/add/nlc_zzr.xlsx')
+
+# parse = parseMarc('fddx11', 'books_book_dan_dan_dan', 'fdu', 1, 2, 4)
+# parse.update_has_table('/Users/daivd/www/python/data/add/nlc_zzr.xlsx')
+
+trans = TransformChinese(db='fddx11', table='books_book_dan_dan_dan')
 keys = ('title_cn', 'description', 'description_plus', 'binding', 'series', 'publish_co', 'pages',
         'publish_address', 'type', 'g200', 'f200', 'e200', 'version',
-        'publish_year')
+        'publish_year','subject_plus')
 keys2 = ('author', 'duty')
 trans.go((keys))
 
@@ -48,6 +57,6 @@ trans.go((keys))
 # update_field = UpdateField(db='fddx10', table='fdu_p_base')
 # update_field.update_type_cluster('fdu')
 
-# designate = Designate('fddx7')
-# designate.designate_by_scholar('scholar_president', 'duty', 'books_book_dan',
+# designate = Designate('fddx11')
+# designate.designate_by_scholar('scholar_president', 'duty', 'books_book_dan_dan_dan',
 #                                'duty_book')

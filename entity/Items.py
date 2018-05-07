@@ -5,6 +5,7 @@
 
 class Items:
     sid = ''
+    fdu_sys_no = ''
     type = ''
     title_cn = ''
     title_py = ''
@@ -20,7 +21,9 @@ class Items:
     title_foreign = ''
     description = ''
     description_plus = ''
+    subject_plus = ''
     isbn = ''
+    book_number = ''
     binding = ''
     price = ''
     publish_co = ''

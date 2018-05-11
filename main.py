@@ -82,8 +82,8 @@ from dao.Designate import *
 # deWeight = DeWeight('books_book_dan')
 # deWeight.many(['isbn','title_cn'],'books_book_shuan','books_book_dan_dan','books_book_shuan_m')
 
-deWeight = DeWeight('xwlw7')
-deWeight.many2(['title_cn','author'],'xwlw_final3_shuan2','xwlw_final3_dan','xwlw_final3_shuan_m')
+deWeight = DeWeight('xwlw_final4')
+deWeight.many2(['title_cn','author'],'xwlw_final3_shuan_m','xwlw_final3_dan','xwlw_final3_shuan_m')
 
 
 # uncorrelated = Uncorrelated('fddx10')

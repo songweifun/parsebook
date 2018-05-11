@@ -209,7 +209,7 @@ class DeWeight():
                     "{}='{}'".format(k, pymysql.escape_string(v) if v else '') for k, v in r.items())
                 sqlwhere = "select id from {} WHERE {}".format(
                     self.table, where)
-                print(sqlwhere)
+                # print(sqlwhere)
                 self.cur.execute(sqlwhere)
                 results_counts = self.cur.fetchall()
                 if (len(results_counts) > 1):
@@ -224,19 +224,21 @@ class DeWeight():
 
                         data = o[0]
                         double_list.append(data['sid'])
-                        search_sql = "select count(*) as count from {} where sid='{}'".format(
-                            merge_table, data['sid'])
+                        # where = ' and '.join("{}='{}'".format(k, pymysql.escape_string(data[k]) if data[k] else '') for k in filter_list)
+                        search_sql = "select count(*) as count from {} where id = '{}'".format(
+                            merge_table, data['id'])
+                        print(search_sql)
                         self.cur.execute(search_sql)
                         count = self.cur.fetchone()['count']
 
                         # print(self.cur.fetchone()['count'])
-                        del data['id']
+                        # del data['id']
                         if count < 1:
                             insert_sql = 'insert into {} ({}) values ({}) '.format(
                                 merge_table, ','.join(
                                     "`{}`".format(i) for i in data.keys()),
                                 ','.join(
-                                    "'{}'".format(pymysql.escape_string(i) if i else '')
+                                    "'{}'".format(pymysql.escape_string(str(i)) if i else '')
                                     for i in data.values()))
 
                             self.cur.execute(insert_sql)

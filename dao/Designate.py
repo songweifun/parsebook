@@ -6,6 +6,19 @@ import pymysql
 class Designate():
     def __init__(self, db):
         self.db = db
+        h = DBHelper(self.db)
+        self.conn = h.getConnection()
+        self.cursor = self.conn.cursor()
+
+    def is_in_table(self, table, field, field_value):
+        search_sql_pre = "select count(*) as count from {} where `{}`='{}'"
+        search_sql = search_sql_pre.format(table, field, field_value)
+        self.cursor.execute(search_sql)
+        count = self.cursor.fetchone()['count']
+        if count < 1:
+            return True
+        else:
+            return False
 
     def designate_by_scholar(self, scholar_table, duty_table, data_table,
                              duty_out_table):
@@ -59,7 +72,7 @@ class Designate():
                     conn.commit()
                 elif name in (title_cn+series+e200+c200+i200+f200+g200+subject_plus):
                     print(sid,title_cn+series+e200+c200+i200+f200+g200)
-                    description_sql = "insert into {} (sid, author, duty, description_plus) values ('{}','{}','{}','{}')".format(duty_out_table, sid, name, '内容相关', pymysql.escape_string(title_cn+series))
+                    description_sql = "insert into {} (sid, author, duty, description_plus) values ('{}','{}','{}','{}')".format(duty_out_table, sid, name, '', pymysql.escape_string(title_cn+series+e200+c200+i200+f200+g200+subject_plus))
                     cursor.execute(description_sql)
                     conn.commit()
             # print(decription)
@@ -73,3 +86,31 @@ class Designate():
         for sid_dict in sids:
             sid = sid_dict['sid']
             print(sid)
+
+    def take_master_book(self, master_table, duty_table, from_table, target_table):
+        master_sql =  "select name from {}".format(master_table)
+        self.cursor.execute(master_sql)
+        maters = self.cursor.fetchall()
+
+        for master in maters:
+            name = master['name']
+            duty_sql = "select sid from {} where author= '{}'".format(duty_table,name)
+            self.cursor.execute(duty_sql)
+            dutys = self.cursor.fetchall()
+            fgsql = "select sid from {} where f200 like '%{}%' or g200 like '%{}%'".format(from_table,name,name)
+            self.cursor.execute(fgsql)
+            fgs = self.cursor.fetchall()
+            for duty in dutys:
+                sid = duty['sid']
+                if self.is_in_table(target_table, 'sid', sid):
+                    insert_sql = "insert into {} select * from {} where sid ='{}'".format(target_table,from_table,sid)
+                    self.cursor.execute(insert_sql)
+                    self.conn.commit()
+            for fg in fgs:
+                sid = duty['sid']
+                if self.is_in_table(target_table, 'sid', sid):
+                    insert_sql = "insert into {} select * from {} where sid ='{}'".format(target_table,from_table,sid)
+                    self.cursor.execute(insert_sql)
+                    self.conn.commit()
+        self.cursor.close()
+        self.conn.close()

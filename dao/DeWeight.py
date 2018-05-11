@@ -6,7 +6,7 @@ class DeWeight():
     def __init__(self, table):
         self.table = table
         # self.list = list
-        db = DBHelper('fddx11')
+        db = DBHelper('fddx13')
         self.conn = db.getConnection()
         self.cur = self.conn.cursor()
 
@@ -183,6 +183,79 @@ class DeWeight():
         print(merge_dan_sql)
         self.cur.execute(merge_dan_sql)
         self.conn.commit()
+
+        #     else:
+        #         where= ' and '.join("{}='{}'".format(i,MySQLdb.escape_string(r[k])) for k,i in enumerate(list))
+        #         sqlwhere = "select id as count from {} WHERE {}".format(tableName,where)
+        #         #print sqlwhere
+        #         cur.execute(sqlwhere)
+        #         results_counts = cur.fetchall()
+        #         if (len(results_counts) > 0):
+        #             templist = []
+        #             for count in results_counts:
+        #                 templist.append(count[0])
+        #             mergeList(templist)
+
+    def many2(self, filter_list, merge_table, dan_table, merged_table):
+        double_list = []
+        sql = "select {} from {}".format(','.join(filter_list), self.table)
+        self.cur.execute(sql)
+        results_fields = self.cur.fetchall()
+        print(len(results_fields))
+        for r in results_fields:
+            # print r
+            if 1 == 1:
+                where = ' and '.join(
+                    "{}='{}'".format(k, pymysql.escape_string(v) if v else '') for k, v in r.items())
+                sqlwhere = "select id from {} WHERE {}".format(
+                    self.table, where)
+                print(sqlwhere)
+                self.cur.execute(sqlwhere)
+                results_counts = self.cur.fetchall()
+                if (len(results_counts) > 1):
+                    templist = []
+                    for item in results_counts:
+                        templist.append(item['id'])
+                    print(templist)
+                    one = self.mergeList(templist)
+
+                    for o in one:
+                        # print(o)
+
+                        data = o[0]
+                        double_list.append(data['sid'])
+                        search_sql = "select count(*) as count from {} where sid='{}'".format(
+                            merge_table, data['sid'])
+                        self.cur.execute(search_sql)
+                        count = self.cur.fetchone()['count']
+
+                        # print(self.cur.fetchone()['count'])
+                        del data['id']
+                        if count < 1:
+                            insert_sql = 'insert into {} ({}) values ({}) '.format(
+                                merge_table, ','.join(
+                                    "`{}`".format(i) for i in data.keys()),
+                                ','.join(
+                                    "'{}'".format(pymysql.escape_string(i) if i else '')
+                                    for i in data.values()))
+
+                            self.cur.execute(insert_sql)
+                            self.conn.commit()
+        #             self.de_weight_isbn2(one, merged_table)
+        #             # print(insert_sql)
+        # double_list = list(set(double_list))
+        # dan_sql = "insert into {} (sid,title_cn,title_py,title_foreign,decription,book_number,binding,price,isbn,category,series,attachment,size,publish_co,pages,publish_address,publish_year,start_year ,end_year,`type`,version,`language`,z200,v200,i200,h200,g200,f200,e200,d200,c200,`from`) select sid,title_cn,title_py,title_foreign,decription,book_number,binding,price,isbn,category,series,attachment,size,publish_co,pages,publish_address,publish_year,start_year ,end_year,`type`,version,`language`,z200,v200,i200,h200,g200,f200,e200,d200,c200,`from` from {} where sid not in (select sid from {})".format(
+        #     dan_table, self.table, merge_table)
+        # self.cur.execute(dan_sql)
+        # self.conn.commit()
+        # print(len(double_list))
+
+        # # 将merged表插入单表
+        # merge_dan_sql = "insert into `{}` (sid,title_cn,title_py,title_foreign,decription,book_number,binding,price,isbn,category,series,attachment,size,publish_co,pages,publish_address,publish_year,start_year ,end_year,`type`,version,`language`,z200,v200,i200,h200,g200,f200,e200,d200,c200,`from`)  select sid,title_cn,title_py,title_foreign,decription,book_number,binding,price,isbn,category,series,attachment,size,publish_co,pages,publish_address,publish_year,start_year ,end_year,`type`,version,`language`,z200,v200,i200,h200,g200,f200,e200,d200,c200,`from` from `{}`".format(
+        #     dan_table, merged_table)
+        # print(merge_dan_sql)
+        # self.cur.execute(merge_dan_sql)
+        # self.conn.commit()
 
         #     else:
         #         where= ' and '.join("{}='{}'".format(i,MySQLdb.escape_string(r[k])) for k,i in enumerate(list))

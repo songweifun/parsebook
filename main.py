@@ -23,6 +23,18 @@ from dao.Designate import *
 
 # parse = parseMarc('fddx11', 'books_book_dan_dan_dan2', 'nlc', 0, 3, 4)
 # parse.parse_marc('/Users/daivd/www/python/data/p_marc/nlc_president.xlsx')
+# parse = parseMarc('fddx', 'books_president', 'fdu', 2, 3, 5)
+# parse.parse_marc('/Users/sower/www/python3/parsebook/data/excel/fdu_president.xlsx')
+
+# parse = parseMarc('fddx', 'books_president', 'nlc', 0, 3, 4)
+# parse.parse_marc('/Users/sower/www/python3/parsebook/data/excel/nlc_president.xlsx')
+
+# trans = TransformChinese(db='fddx', table='books_president')
+# keys = ('title_cn', 'description', 'description_plus', 'binding', 'series', 'publish_co', 'pages',
+#         'publish_address', 'type', 'g200', 'f200', 'e200', 'version',
+#         'publish_year')
+# keys2 = ('author', 'duty')
+# trans.go((keys))
 
 # parse = parseMarc('fddx10', 'books', 'fdu', 2, 3, 5)
 # parse.parse_marc('/Users/daivd/www/python/data/fdu_professor.xlsx')
@@ -94,7 +106,7 @@ deWeight.many2(['title_cn','author'],'xwlw_final3_shuan2','xwlw_final3_dan','xwl
 # uncorrelated = Uncorrelated('fddx10')
 # uncorrelated.go('target_table', 'duty', 'master')
 
-parse = parseMarc('fddx13', 'xwlw7', 'fdu', 1, 2, 4)
+# parse = parseMarc('fddx13', 'xwlw7', 'fdu', 1, 2, 4)
 
 # parse.update_table_by_table2("xwlw_final3","xw001","sid",['fdu_sys_no'])
 
